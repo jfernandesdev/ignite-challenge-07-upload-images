@@ -18,6 +18,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
 
   const formValidations = {
     image: {
+      
       // TODO REQUIRED, LESS THAN 10 MB AND ACCEPTED FORMATS VALIDATIONS
     },
     title: {
