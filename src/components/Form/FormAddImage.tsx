@@ -57,6 +57,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   };
 
   const queryClient = useQueryClient();
+
   const mutation = useMutation(
     async (formData: FormDataProps) => {
       await api.post('/api/images', {
@@ -135,11 +136,11 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       </Stack>
 
       <Button
-        my={6}
+        type="submit"
         isLoading={formState.isSubmitting}
         isDisabled={formState.isSubmitting}
-        type="submit"
         w="100%"
+        my={6}
         py={6}
       >
         Enviar
