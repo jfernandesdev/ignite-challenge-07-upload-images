@@ -22,7 +22,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const [localImageUrl, setLocalImageUrl] = useState('');
   const toast = useToast();
 
-  const acceptFormats =
+  const acceptedFormatsRegex =
     /(?:([^:/?#]+):)?(?:([^/?#]*))?([^?#](?:jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/g;
 
   const formValidations = {
@@ -32,7 +32,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         lessThan10MB: file =>
           file[0].size < 10000000 || 'O arquivo deve ser menor que 10MB',
         acceptedFormats: file =>
-          acceptFormats.test(file[0].type) ||
+          acceptedFormatsRegex.test(file[0].type) ||
           'Somente são aceitos arquivos PNG, JPEG e GIF',
       },
     },
@@ -40,18 +40,18 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       required: 'Título obrigatório',
       minLength: {
         value: 2,
-        message: 'Mínimo 2 caracteres',
+        message: 'Mínimo de 2 caracteres',
       },
       maxLength: {
         value: 20,
-        message: 'Máximo 20 caracteres',
+        message: 'Máximo de 20 caracteres',
       },
     },
     description: {
       required: 'Descrição obrigatória',
       maxLength: {
         value: 65,
-        message: 'Máximo 65 caracteres',
+        message: 'Máximo de 65 caracteres',
       },
     },
   };
@@ -59,7 +59,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const queryClient = useQueryClient();
   const mutation = useMutation(
     async (formData: FormDataProps) => {
-      await api.post('api/images', {
+      await api.post('/api/images', {
         ...formData,
         url: imageUrl,
       });
@@ -75,24 +75,28 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
     useForm();
   const { errors } = formState;
 
-  const onSubmit = async (data: Record<string, unknown>): Promise<void> => {
+  const onSubmit = async (data: FormDataProps): Promise<void> => {
     try {
       if (!imageUrl) {
         toast({
+          status: 'error',
           title: 'Imagem não adicionada',
           description:
             'É preciso adicionar e aguardar o upload de uma imagem antes de realizar o cadastro.',
         });
+        return;
       }
 
       await mutation.mutateAsync(data);
 
       toast({
+        status: 'success',
         title: 'Imagem cadastrada',
-        description: 'Sua imagem foi cadastrada.',
+        description: 'Sua imagem foi cadastrada com sucesso.',
       });
     } catch {
       toast({
+        status: 'error',
         title: 'Falha no cadastro',
         description: 'Ocorreu um erro ao tentar cadastrar a sua imagem.',
       });
