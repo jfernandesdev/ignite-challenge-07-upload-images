@@ -51,7 +51,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       required: 'Descrição obrigatória',
       maxLength: {
         value: 65,
-        message: 'Mínimo 65 caracteres',
+        message: 'Máximo 65 caracteres',
       },
     },
   };
